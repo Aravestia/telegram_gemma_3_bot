@@ -22,15 +22,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def ask(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    def to_msg(list):
-        return ''.join(list).replace('*', '-').replace('--', '*')
-    
     async def send_msg(msg, msg_list):
         try:
             await context.bot.editMessageText(
                 chat_id=update.effective_chat.id,
                 message_id=msg.message_id, 
-                text=to_msg(msg_list),
+                text=''.join(msg_list).replace('*', '-').replace('--', '*'),
                 parse_mode="Markdown"
             )
         except Exception as e:
@@ -57,9 +54,9 @@ async def ask(update: Update, context: ContextTypes.DEFAULT_TYPE):
             break
         
         if len(msg_list) % MAX_CHUNK_LEN == 0:   
-            send_msg(msg, msg_list)
+            await send_msg(msg, msg_list)
                 
-    send_msg(msg, msg_list)
+    await send_msg(msg, msg_list)
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(TOKEN).build()
